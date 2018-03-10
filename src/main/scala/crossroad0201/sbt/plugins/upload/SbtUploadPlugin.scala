@@ -1,7 +1,6 @@
 package crossroad0201.sbt.plugins.upload
 
 import sbt._
-import sbt.Keys._
 import sbt.plugins.JvmPlugin
 
 object SbtUploadPlugin extends AutoPlugin {
@@ -10,15 +9,22 @@ object SbtUploadPlugin extends AutoPlugin {
   override def requires = JvmPlugin
 
   object autoImport {
-    val exampleSetting = settingKey[String]("A setting that is automatically imported to the build")
-    val exampleTask = taskKey[String]("A task that is automatically imported to the build")
+    val uploadSets = settingKey[Seq[UploadSet]]("FIXME about uploadSets.")
+    val upload = taskKey[Unit]("FIXME about upload.")  // TODO Specify UploadSet name.
   }
 
   import autoImport._
 
   override lazy val projectSettings = Seq(
-    exampleSetting := "just an example",
-    exampleTask := "computed from example setting: " + exampleSetting.value
+    uploadSets := Seq(),
+    upload := Def.task {
+      for {
+        uploadSet <- uploadSets.value
+        file <- uploadSet.fileSet.listFiles
+      } yield for {
+        _ <- uploadSet.dest.getUploader.upload(file)
+      } yield ()
+    }.value
   )
 
   override lazy val buildSettings = Seq()
