@@ -1,16 +1,94 @@
-# sbt Upload
+# sbt File-Upload plugin
 
-An sbt Upload
+A simple sbt plugin for file upload to any destination.
 
 ## Usage
 
-This plugin requires sbt 1.0.0+
+### Supported sbt version
+
+This plugin supports sbt version 1.x and 0.13.x.
+
+### Enable plugin
+
+* Add to your `project/plugins.sbt`.
+  ```scala
+  addSbtPlugin("com.github.crossroad0201" % "sbt-fileupload" % VERSION)
+  ```
+
+* Enable `FileUploadPlugin`.
+
+
+### Plugin configuration
+
+* import `fileupload._`.
+
+* Define upload files and destination via `fileSets` key.
+
+### build.sbt example
+
+```scala
+import fileupload._
+
+lazy val root = (project in file("."))
+  .enablePlugins(FileUploadPlugin)
+  .settings(
+    uploadSets := Seq(
+      // Specify file path.
+      UploadSet(
+        dest = AmazonS3("YOUR-S3-BUCKET", "files"),
+        fileSet = Seq(
+          file("foo/bar.txt")
+        )
+      ),
+      // Specify Apache-Ant style file pattern.
+      UploadSet(
+        dest = AmazonS3("YOUR-S3-BUCKET", "modules"),
+        fileSet = AntStyle(file("target"))
+          .includes(
+            "**/*.jar"
+          )
+          .excludes(
+            "streams/**"
+          )
+      )
+    )
+  )
+```
+
+### Do upload!
+
+Run `fileUpload` task.
+
+```shell
+sbt fileUpload
+```
+
+## Destinations
+
+### Amazon S3
+
+`fileupload.AmazonS3(bucketName, prefix)`
+
+## File sets
+
+### File(s)
+
+Specify upload file(s).
+
+### Apache-Ant style file set
+
+Upload matched file(s) under a specific base directory.
+
+About the pattern for file name, see [here](https://ant.apache.org/manual/dirtasks.html#patterns). 
+
+
+----
 
 ### Testing
 
-Run `test` for regular unit tests.
+Run `sbt test` for regular unit tests.
 
-Run `scripted` for [sbt script tests](http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html).
+Run `sbt "^ publishLocal" && (cd src/sbt-test/sbt-fileupload/simple && sbt -Dplugin.version=0.1-SNAPSHOT fileUpload)` for plugin usage tests.
 
 ### Publishing
 
