@@ -1,10 +1,12 @@
+sbtPlugin := true
+
 name := """sbt-fileupload"""
 organization := "com.github.crossroad0201"
 version := "0.1-SNAPSHOT"
 
 scalacOptions    ++= Seq("-feature", "-deprecation")
+// ^ publish
 crossSbtVersions  := Seq("0.13.6", "1.0.0")
-sbtPlugin := true
 
 libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3" % "1.11.292"
 libraryDependencies += "io.github.azagniotov" % "ant-style-path-matcher" % "1.0.0"
@@ -16,6 +18,4 @@ bintrayVcsUrl := Some("""git@github.com:com.github.crossroad0201/sbt-fileupload.
 
 initialCommands in console := """import crossroad0201.sbt.plugins.upload._"""
 
-// set up 'scripted; sbt plugin for testing sbt plugins
-scriptedLaunchOpts ++=
-  Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+scriptedLaunchOpts ++= Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
