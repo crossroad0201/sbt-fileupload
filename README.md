@@ -2,6 +2,8 @@
 
 A simple sbt plugin for file upload to any destination.
 
+**!!! Currently under development. !!!**
+
 ## Usage
 
 ### Supported sbt version
@@ -12,6 +14,11 @@ This plugin supports sbt version 1.x and 0.13.x.
 
 * Add to your `project/plugins.sbt`.
   ```scala
+  resolvers += Resolver.url(
+    "crossroad0201 Plugin Repository",
+    url("https://dl.bintray.com/crossroad0201/sbt-plugins/")
+  )(Resolver.ivyStylePatterns)
+
   addSbtPlugin("com.github.crossroad0201" % "sbt-fileupload" % VERSION)
   ```
 
@@ -67,7 +74,9 @@ sbt fileUpload
 
 ### Amazon S3
 
-`fileupload.AmazonS3(bucketName, prefix)`
+Use `fileupload.AmazonS3(bucketName, prefix)`.
+
+Working with [Default Credential Provider Chain](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html). 
 
 ## File sets
 
@@ -92,11 +101,10 @@ Run `sbt "^ publishLocal" && (cd src/sbt-test/sbt-fileupload/simple && sbt -Dplu
 
 ### Publishing
 
-1. publish your source to GitHub
-2. [create a bintray account](https://bintray.com/signup/index) and [set up bintray credentials](https://github.com/sbt/sbt-bintray#publishing)
-3. create a bintray repository `sbt-plugins` 
-4. update your bintray publishing settings in `build.sbt`
-5. `sbt publish`
-6. [request inclusion in sbt-plugin-releases](https://bintray.com/sbt/sbt-plugin-releases)
-7. [Add your plugin to the community plugins list](https://github.com/sbt/website#attention-plugin-authors)
-8. [Claim your project an Scaladex](https://github.com/scalacenter/scaladex-contrib#claim-your-project)
+1. Create account on [Bintray](https://bintray.com/signup/oss).
+1. Change version in `build.sbt`.
+1. Run sbt.
+1. Run `bintrayChangeCredentials` task. (Prompt Bintray username and API key)
+1. Run `^ publish` task. (Do not forget `^` for cross sbt build)
+
+See [here](https://www.scala-sbt.org/1.0/docs/Bintray-For-Plugins.html) for more information.
