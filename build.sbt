@@ -1,7 +1,7 @@
 sbtPlugin := true
 
 name := """sbt-fileupload"""
-organization := "com.github.crossroad0201"
+organization := "crossroad0201.sbt"
 version := "0.1-SNAPSHOT"
 
 scalacOptions    ++= Seq("-feature", "-deprecation")
@@ -14,8 +14,8 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1" % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % Test
 
 bintrayPackageLabels := Seq("sbt","plugin")
-bintrayVcsUrl := Some("""git@github.com:com.github.crossroad0201/sbt-fileupload.git""")
+bintrayVcsUrl := Some("""git@github.com:crossroad0201/sbt-fileupload.git""")
 
-initialCommands in console := """import crossroad0201.sbt.plugins.upload._"""
+initialCommands in console := """import fileupload._"""
 
 scriptedLaunchOpts ++= Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
