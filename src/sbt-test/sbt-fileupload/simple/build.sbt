@@ -1,7 +1,7 @@
-import crossroad0201.sbt.plugins.upload._
+import fileupload._
 
 lazy val simple = (project in file("."))
-  .enablePlugins(SbtUploadPlugin)
+  .enablePlugins(FileUploadPlugin)
   .settings(
     version := "0.1",
     scalaVersion := "2.12.1",

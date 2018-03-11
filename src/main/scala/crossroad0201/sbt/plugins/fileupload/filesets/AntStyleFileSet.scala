@@ -1,11 +1,11 @@
-package crossroad0201.sbt.plugins.upload.filesets
+package crossroad0201.sbt.plugins.fileupload.filesets
 
-import crossroad0201.sbt.plugins.upload.FileSet
+import fileupload.FileSet
 import io.github.azagniotov.matcher.AntPathMatcher
+import sbt.File
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
-import sbt.File
 
 case class AntStyleFileSet(
   baseDir: File,

@@ -1,23 +1,23 @@
-package crossroad0201.sbt.plugins.upload
+package fileupload
 
 import sbt._
 import sbt.plugins.JvmPlugin
 
-object SbtUploadPlugin extends AutoPlugin {
+object FileUploadPlugin extends AutoPlugin {
 
   override def trigger = allRequirements
   override def requires = JvmPlugin
 
   object autoImport {
-    val uploadSets = settingKey[Seq[UploadSet]]("FIXME about uploadSets.")
-    val upload = taskKey[Unit]("FIXME about upload.")  // TODO Specify UploadSet name.
+    val uploadSets = settingKey[Seq[UploadSet]]("The file(s) to be uploaded and the destination.")
+    val fileUpload = taskKey[Unit]("Upload files.")
   }
 
   import autoImport._
 
   override lazy val projectSettings = Seq(
     uploadSets := Seq(),
-    upload := Def.task {
+    fileUpload := Def.task {
       for {
         uploadSet <- uploadSets.value
         file <- uploadSet.fileSet.listFiles

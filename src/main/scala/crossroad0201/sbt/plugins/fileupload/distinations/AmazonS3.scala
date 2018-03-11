@@ -1,8 +1,8 @@
-package crossroad0201.sbt.plugins.upload.distinations
+package crossroad0201.sbt.plugins.fileupload.distinations
 
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.PutObjectRequest
-import crossroad0201.sbt.plugins.upload.{Destination, Uploader}
+import fileupload.{Destination, Uploader}
 import sbt.File
 
 import scala.Console._
