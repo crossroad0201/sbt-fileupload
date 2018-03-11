@@ -1,6 +1,6 @@
 # sbt File-Upload plugin
 
-A simple sbt plugin for file upload to any destination.
+A simple sbt plugin for file upload to any destinations.
 
 **!!! Currently under development. !!!**
 
@@ -10,7 +10,7 @@ A simple sbt plugin for file upload to any destination.
 
 This plugin supports sbt version 1.x and 0.13.x.
 
-### Enable plugin
+### Add plugin
 
 * Add to your `project/plugins.sbt`.
   ```scala
@@ -22,16 +22,13 @@ This plugin supports sbt version 1.x and 0.13.x.
   addSbtPlugin("com.github.crossroad0201" % "sbt-fileupload" % VERSION)
   ```
 
-* Enable `FileUploadPlugin`.
-
-
 ### Plugin configuration
 
 * import `fileupload._`.
 
-* Define upload files and destination via `fileSets` key.
+* Enable `FileUploadPlugin` via `enablePlugins()`.
 
-### build.sbt example
+* Define upload files and destination via `uploadSets` key.
 
 ```scala
 import fileupload._
@@ -54,9 +51,6 @@ lazy val root = (project in file("."))
           .includes(
             "**/*.jar"
           )
-          .excludes(
-            "streams/**"
-          )
       )
     )
   )
@@ -76,7 +70,15 @@ sbt fileUpload
 
 Use `fileupload.AmazonS3(bucketName, prefix)`.
 
-Working with [Default Credential Provider Chain](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html). 
+AWS credential is working with [Default Credential Provider Chain](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html). 
+
+```scala
+// Bucket only.
+dest = AmazonS3("BUCKET_NAME")
+
+// Bucket with prefix.
+dest = AmazonS3("BUCKET_NAME", "PREFIX")
+```
 
 ## File sets
 
@@ -84,14 +86,35 @@ Working with [Default Credential Provider Chain](https://docs.aws.amazon.com/sdk
 
 Specify upload file(s).
 
+```scala
+// a file.
+fileSet = file("foo")
+
+// some files.
+fileSet = Seq(
+  file("foo"),
+  file("bar")
+)
+```
+
 ### Apache-Ant style file set
 
 Upload matched file(s) under a specific base directory.
 
 About the pattern for file name, see [here](https://ant.apache.org/manual/dirtasks.html#patterns). 
 
+```scala
+fileSet = AntStyle(file("BASE_DIR"))
+  .includes(
+    "*.jar",
+    "**/*.jar"
+  )
+  .excludes(
+    "temp/**/*"
+  )
+```
 
-----
+## For maintainer
 
 ### Testing
 
@@ -99,7 +122,7 @@ Run `sbt test` for regular unit tests.
 
 Run `sbt "^ publishLocal" && (cd src/sbt-test/sbt-fileupload/simple && sbt -Dplugin.version=0.1-SNAPSHOT fileUpload)` for plugin usage tests.
 
-### Publishing
+### Publishing to Bintray
 
 1. Create account on [Bintray](https://bintray.com/signup/oss).
 1. Change version in `build.sbt`.
