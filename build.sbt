@@ -3,7 +3,7 @@ sbtPlugin := true
 name := """sbt-fileupload"""
 organization := "com.github.crossroad0201"
 description := "A simple sbt plugin for file upload to any destination."
-version := "0.1.1"
+version := "0.1.2-SNAPSHOT"
 
 scalacOptions    ++= Seq("-feature", "-deprecation")
 // ^ publish
