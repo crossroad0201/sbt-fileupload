@@ -18,15 +18,15 @@ object FileUploadPlugin extends AutoPlugin {
   override lazy val projectSettings = Seq(
     uploadSets := Seq(),
     fileUpload := Def.task {
+      // FIXME Call Uploader#close()
       for {
         uploadSet <- uploadSets.value
+        uploader = uploadSet.dest.getUploader
         file <- uploadSet.fileSet.listFiles
         destPath = if (uploadSet.keepDirStructure) file.getPath else file.getName
-        uploader = uploadSet.dest.getUploader
       } yield for {
         _ <- uploader.upload(file, destPath)
-        // FIXME Call Uploader#close()
-      } yield uploader.close()
+      } yield uploader
     }.value
   )
 

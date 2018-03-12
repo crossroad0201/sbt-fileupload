@@ -29,6 +29,17 @@ lazy val simple = (project in file("."))
           .excludes(
             "streams/**"
           )
+      ),
+      UploadSet(
+        dest = crossroad0201.sbt.plugins.fileupload.distinations.SCP(
+          "34.226.220.202", 22, "~",
+          "ec2-user",
+          crossroad0201.sbt.plugins.fileupload.distinations.PublicKey(file("/Users/yohei/GoogleDrive/Tech/AWS/yohei_us-east-1.pem"))
+        ),
+        fileSet = Seq(
+          file("test"),
+          file("build.sbt")
+        )
       )
     )
   )

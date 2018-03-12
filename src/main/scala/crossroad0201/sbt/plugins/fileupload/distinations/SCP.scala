@@ -1,38 +1,46 @@
 package crossroad0201.sbt.plugins.fileupload.distinations
 
 import java.io.FileInputStream
-import java.security.KeyFactory
 
-import fileupload.{ Destination, Uploader }
+import fileupload.{Destination, Uploader}
 import org.apache.sshd.client.SshClient
 import org.apache.sshd.client.session.ClientSession
-import org.apache.sshd.common.config.keys.loader.pem.RSAPEMResourceKeyPairParser
+import org.apache.sshd.common.config.keys.KeyUtils
+import org.apache.sshd.common.util.security.SecurityUtils
 import sbt.File
 
 import scala.Console._
-import scala.util.{ Failure, Success, Try }
+import scala.language.reflectiveCalls
+import scala.util.{Failure, Success, Try}
 
 case class SCP(
   host: String,
   port: Int,
   remoteDir: String,
   user: String,
-  authentication: Authenticator
+  authenticator: Authenticator
 ) extends Destination {
   override def getUploader = new Uploader {
-    val sshClient = SshClient.setUpDefaultClient()
-    sshClient.start()
+    val sshClient = {
+      val c = SshClient.setUpDefaultClient()
+      c.start()
+      c
+    }
 
-    val sshSession = sshClient.connect(user, host, port).verify(10000).getSession
-    authentication.setIdentityTo(sshSession)
-    sshSession.auth().verify(10000)
+    val sshSession = {
+      println(s"Establishing SSH session to $user@$host:$port...")
+      val s = sshClient.connect(user, host, port).verify(10000).getSession
+      authenticator.setIdentityTo(s)
+      s.auth().verify(10000)
+      s
+    }
 
     val scpClient = sshSession.createScpClient()
 
     override def upload(file: File, destPath: String) = {
       val toPath = s"$remoteDir/$destPath"
 
-      print(s"Uploading ${file.getPath} to scp://$user@$host:$port$toPath...")
+      print(s"Uploading ${file.getPath} to scp://$user@$host:$port/$toPath...")
       val result = for {
         _ <- Try {
           scpClient.upload(file.toPath, destPath)
@@ -48,8 +56,9 @@ case class SCP(
     }
 
     override def close(): Unit = {
-      sshSession.close()
-      sshClient.close()
+      println("Closing SSH session...")
+      Try {sshSession.close()}
+      Try {sshClient.close()}
     }
   }
 }
@@ -70,12 +79,18 @@ case class WithPassword(password: String) extends Authenticator {
 }
 case class PublicKey(keyFile: File) extends Authenticator {
   override def setIdentityTo(session: ClientSession) = {
+    def using[C <: { def close() }, R](c: C)(f: C => R): R = {
+      try {
+        f(c)
+      } finally {
+        c.close()
+      }
+    }
+
     session.addPublicKeyIdentity {
-      RSAPEMResourceKeyPairParser.decodeRSAKeyPair(
-        KeyFactory.getInstance("RSA"),
-        new FileInputStream(keyFile),
-        true
-      )
+      using(new FileInputStream(keyFile)) { in =>
+        SecurityUtils.loadKeyPairIdentity(KeyUtils.RSA_ALGORITHM, in, null)
+      }
     }
     session
   }
