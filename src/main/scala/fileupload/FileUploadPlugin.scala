@@ -21,8 +21,9 @@ object FileUploadPlugin extends AutoPlugin {
       for {
         uploadSet <- uploadSets.value
         file <- uploadSet.fileSet.listFiles
+        destPath = if (uploadSet.keepDirStructure) file.getPath else file.getName
       } yield for {
-        _ <- uploadSet.dest.getUploader.upload(file)
+        _ <- uploadSet.dest.getUploader.upload(file, destPath)
       } yield ()
     }.value
   )

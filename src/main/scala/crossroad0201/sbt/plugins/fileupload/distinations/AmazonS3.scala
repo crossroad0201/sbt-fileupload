@@ -17,10 +17,10 @@ case class AmazonS3(
     // TODO Specify AWS profile.
     private lazy val s3Client = AmazonS3ClientBuilder.standard().build()
 
-    override def upload(file: File) = {
+    override def upload(file: File, destPath: String) = {
       val key = prefix match {
-        case Some(p) => s"$p/${file.getPath}"
-        case None => file.getPath
+        case Some(p) => s"$p/$destPath"
+        case None => destPath
       }
 
       print(s"Uploading ${file.getPath} to s3://$bucketName/$key...")

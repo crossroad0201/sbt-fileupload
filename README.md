@@ -29,6 +29,7 @@ This plugin supports sbt version 1.x and 0.13.x.
 * Enable `FileUploadPlugin` via `enablePlugins()`.
 
 * Define upload files and destination via `uploadSets` key.
+  * if `keepDirStructure` option is `false`, upload file(s) to just under the destination.(Default `true`)
 
 ```scala
 import fileupload._
@@ -47,6 +48,7 @@ lazy val root = (project in file("."))
       // Specify Apache-Ant style file pattern.
       UploadSet(
         dest = AmazonS3("YOUR-S3-BUCKET", "modules"),
+        keepDirStructure = false,
         fileSet = AntStyle(file("target"))
           .includes(
             "**/*.jar"

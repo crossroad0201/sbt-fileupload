@@ -12,8 +12,8 @@ case class AntStyleFileSet(
   includes: List[String] = List("**/*"),
   excludes: List[String] = List()
 ) extends FileSet {
-  def includes(patterns: String*): AntStyleFileSet = copy(includes = patterns.map { p => s"${baseDir.getName}/$p" }.toList)
-  def excludes(patterns: String*): AntStyleFileSet = copy(excludes = patterns.map { p => s"${baseDir.getName}/$p" }.toList)
+  def includes(patterns: String*): AntStyleFileSet = copy(includes = patterns.map { p => s"${baseDir.getPath}/$p" }.toList)
+  def excludes(patterns: String*): AntStyleFileSet = copy(excludes = patterns.map { p => s"${baseDir.getPath}/$p" }.toList)
 
   override def listFiles = {
     val pathPatcher = new AntPathMatcher.Builder().build()
@@ -23,6 +23,7 @@ case class AntStyleFileSet(
       patterns match {
         case Nil => false
         case x::xs =>
+          //println(s"  ${file.getPath} / $x -> ${pathPatcher.isMatch(x, file.getPath)}")
           if (pathPatcher.isMatch(x, file.getPath))
             true
           else
@@ -35,6 +36,7 @@ case class AntStyleFileSet(
       files match {
         case Nil => matchedFiles
         case x::xs =>
+          //println(s"${x.getAbsolutePath} -> ${x.isFile} ${!isMatch(excludes, x)} ${isMatch(includes, x)}")
           if (x.isFile && !isMatch(excludes, x) && isMatch(includes, x)) matchedFiles += x
 
           findFiles(

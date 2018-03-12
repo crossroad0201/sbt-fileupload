@@ -7,5 +7,5 @@ trait Destination {
   def getUploader: Uploader
 }
 trait Uploader {
-  def upload(file: File): Try[Unit]
+  def upload(file: File, destPath: String): Try[Unit]
 }

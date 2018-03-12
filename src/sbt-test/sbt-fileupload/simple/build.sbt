@@ -20,6 +20,7 @@ lazy val simple = (project in file("."))
       ),
       UploadSet(
         dest = AmazonS3("crossroad0201-sandbox", "upload/ant"),
+        keepDirStructure = false,
         fileSet = AntStyle(file("target"))
           .includes(
             "**/*.jar",

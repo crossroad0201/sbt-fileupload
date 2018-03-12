@@ -2,5 +2,6 @@ package fileupload
 
 case class UploadSet(
   dest: Destination,
-  fileSet: FileSet
+  fileSet: FileSet,
+  keepDirStructure: Boolean = true
 )
