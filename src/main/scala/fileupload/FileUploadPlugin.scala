@@ -22,9 +22,11 @@ object FileUploadPlugin extends AutoPlugin {
         uploadSet <- uploadSets.value
         file <- uploadSet.fileSet.listFiles
         destPath = if (uploadSet.keepDirStructure) file.getPath else file.getName
+        uploader = uploadSet.dest.getUploader
       } yield for {
-        _ <- uploadSet.dest.getUploader.upload(file, destPath)
-      } yield ()
+        _ <- uploader.upload(file, destPath)
+        // FIXME Call Uploader#close()
+      } yield uploader.close()
     }.value
   )
 

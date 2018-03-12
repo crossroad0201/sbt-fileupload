@@ -8,4 +8,5 @@ trait Destination {
 }
 trait Uploader {
   def upload(file: File, destPath: String): Try[Unit]
+  def close(): Unit
 }

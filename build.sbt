@@ -10,6 +10,7 @@ scalacOptions    ++= Seq("-feature", "-deprecation")
 crossSbtVersions  := Seq("0.13.6", "1.0.0")
 
 libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3" % "1.11.292"
+libraryDependencies += "org.apache.sshd" % "sshd-core" % "1.7.0"
 libraryDependencies += "io.github.azagniotov" % "ant-style-path-matcher" % "1.0.0"
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1" % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % Test

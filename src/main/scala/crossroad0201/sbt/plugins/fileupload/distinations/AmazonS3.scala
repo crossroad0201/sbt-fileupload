@@ -43,6 +43,8 @@ case class AmazonS3(
 
       result
     }
+
+    override def close(): Unit = ()
   }
 }
 object AmazonS3 {
